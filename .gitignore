@@ -1,0 +1,6 @@
+.venv
+db.sqlite3
+debug.log
+Test_koredata.txt
+__pycache__/
+.idea/
