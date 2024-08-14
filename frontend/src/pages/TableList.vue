@@ -46,7 +46,7 @@ const tableColumns = [
   'cpf',
   'is_active',
   'is_staff',
-  'Acciones',
+
 ];
 
 export default {
