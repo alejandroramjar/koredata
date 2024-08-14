@@ -119,7 +119,7 @@ class ActiveUsersCountView(APIView):
         sessions = Session.objects.filter(expire_date__gte=timezone.now())
         user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
         user_auth_count = len(set(user_ids))
-        user_auth_count +=1
+        user_auth_count +=1 # se le suma 1 porque obtiene el valor de un array.
         user_count = User.objects.filter(is_active=True).count()
         return Response({'count': user_count, 'user_auth_count': user_auth_count, 'request_count': request_count})
 
