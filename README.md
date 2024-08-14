@@ -64,8 +64,8 @@ ubicado en la carpeta `frontend` en la raíz del proyecto.
 
 1. Clona el repositorio:
     ```bash
-    git clone https://github.com/tu_usuario/tu_proyecto.git
-    cd koredata_test
+    git clone https://github.com/alejandroramjar/koredata.git
+    cd koredata
     ```
 
 2. Crea y activa un entorno virtual:
