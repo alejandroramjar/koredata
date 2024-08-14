@@ -107,7 +107,7 @@ export default {
         .catch(error => {
           console.error('Error al actualizar el perfil:', error);
           if (error.response && error.response.data) {
-            alert(`Error al actualizar el perfil: ${error.response.data.error.ErrorDetail || error.response.data}`);
+            alert(`Error al actualizar el perfil: ${error.response.data.error || error.response.data}`);
           } else {
             alert('Error al actualizar el perfil: Ocurrió un error inesperado.');
           }

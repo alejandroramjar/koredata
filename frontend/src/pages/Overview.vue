@@ -36,11 +36,11 @@
               <i class="nc-icon nc-light-3 text-success"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Visitas</p>
+              <p class="card-category">Cantidad solicitudes</p>
               <h4 class="card-title">{{ requestCount }}</h4>
             </div>
             <div slot="footer" @click="fetchActiveUsersCount">
-              <i class="fa fa-calendar-o"></i>Actualizar
+              <i class="fa fa-calendar-o"></i>Last re-count
             </div>
           </stats-card>
         </div>
@@ -51,8 +51,8 @@
               <i class="nc-icon nc-vector text-danger"></i>
             </div>
             <div slot="content">
-              <p class="card-category">Errors</p>
-              <h4 class="card-title">23</h4>
+              <p class="card-category">Usuarios Inactivos</p>
+              <h4 class="card-title">{{ users_inactives }}</h4>
             </div>
             <div slot="footer">
               <i class="fa fa-clock-o"></i>Last day
@@ -193,7 +193,8 @@ export default {
       },
       userCount: 0,// Contador de usuarios activos
       userAuth: 0, //contador de usuarios authenticados
-      requestCount: 0,// contador de visitas
+      requestCount: 0,// contador de solicitudes
+      users_inactives: 0, // usuarios inactivos
       lineChart: {
         data: {
           labels: ['9:00AM', '12:00AM', '3:00PM', '6:00PM', '9:00PM', '12:00PM', '3:00AM', '6:00AM'],
@@ -282,6 +283,7 @@ export default {
         this.userCount = response.data.count;
         this.userAuth = response.data.user_auth_count;
         this.requestCount = response.data.request_count;
+        this.users_inactives = response.data.users_inactives;
       } catch (error) {
         console.error('Error al obtener los datos:', error);
       }

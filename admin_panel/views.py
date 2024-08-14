@@ -11,12 +11,22 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenVerifyView
 
 from .models import Usuario
 from .serializers import UsuarioSerializer
 
 logger = logging.getLogger(__name__)
 
+
+
+class CustomTokenVerifyView(TokenVerifyView):
+    def post(self, request, *args, **kwargs):
+        try:
+            response = super().post(request, *args, **kwargs)
+            return response
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
@@ -50,7 +60,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             return response
         except Exception as e:
             logger.critical(f"Error inesperado al actualizar los detalles del usuario: {e}")
-            return Response({"error": f"Error inesperado, por favor intente nuevamente más tarde.{e}"},
+            return Response({"error": f"Error inesperado, por favor intente nuevamente más tarde.{e.detail}"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, *args, **kwargs):
@@ -115,13 +125,16 @@ class ActiveUsersCountView(APIView):
 
     def get(self, request):
         User = get_user_model()
+        users_inactives = Usuario.objects.filter(is_active=False).count()
+        users_actives = Usuario.objects.filter(is_active=True).count()
         request_count = cache.get('request_count', 0)
         sessions = Session.objects.filter(expire_date__gte=timezone.now())
         user_ids = [session.get_decoded().get('_auth_user_id') for session in sessions]
         user_auth_count = len(set(user_ids))
-        user_auth_count +=1 # se le suma 1 porque obtiene el valor de un array.
+        user_auth_count += 1  # se le suma 1 porque obtiene el valor de un array.
         user_count = User.objects.filter(is_active=True).count()
-        return Response({'count': user_count, 'user_auth_count': user_auth_count, 'request_count': request_count})
+        return Response({'count': user_count, 'user_auth_count': user_auth_count, 'request_count': request_count,
+                         'users_actives': users_actives, 'users_inactives': users_inactives})
 
 # class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 #     queryset = Usuario.objects.all()
