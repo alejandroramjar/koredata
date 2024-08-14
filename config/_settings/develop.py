@@ -5,11 +5,11 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', default='koredata'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'NAME': decouple_config('DB_NAME', default='koredata'),
+        'USER': decouple_config('DB_USER'),
+        'PASSWORD': decouple_config('DB_PASSWORD'),
+        'HOST': decouple_config('DB_HOST'),
+        'PORT': decouple_config('DB_PORT'),
     }
 }
 # ALLOWED_HOSTS = ["127.0.0.1"]
@@ -53,7 +53,7 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
-        'accounts': {
+        'admin_panel': {
             'handlers': ['file'],  # se quito la consola del registro de eventos
             'level': 'DEBUG',
             'propagate': True,

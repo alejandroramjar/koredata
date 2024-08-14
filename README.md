@@ -53,7 +53,7 @@ ubicado en la carpeta `frontend` en la raíz del proyecto.
 
 ## Funcionalidades
 - API para gestión de usuarios (CRUD).
-- Autenticación y autorización de usuarios.
+- Autenticación y autorización de usuarios. (Autenticación por token)
 - Validaciones necesarias para garantizar la integridad de los datos.
 - Registro de la actividad de la aplicación.
 - Notificación de registro exitoso de usuario via Email

@@ -1,5 +1,7 @@
 <template>
   <div class="container mt-5">
+    <!-- Pre loader -->
+
     <div class="card shadow-sm">
       <div class="card-body">
         <h2 class="card-title text-center mb-4">Registrarse</h2>
@@ -45,7 +47,10 @@
             </div>
           </div>
           <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-outline-dark">Registrarse</button>
+            <button type="submit" @click="spiner()" class="btn btn-outline-dark">
+              <div v-if="loading" class="spinner-border spinner-border-sm"></div>
+              Registrarse
+            </button>
             <p class="text-center mt-3">
               ¿Ya tienes una cuenta?
               <router-link to="/login">Inicia sesión aquí</router-link>
@@ -63,6 +68,7 @@
 <script>
 import axios from 'axios';
 
+
 export default {
   name: 'Register',
   data() {
@@ -75,6 +81,7 @@ export default {
       email: '',
       edad: null,
       cpf: '',
+      loading: false
     };
   },
   methods: {
@@ -95,17 +102,21 @@ export default {
       formData.append('cpf', this.cpf);
 
       try {
+        this.loading = true
         const response = await axios.post('http://localhost:8000/api/registro/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
         console.log(response);
+        this.loading = false
+
         alert('Registro exitoso. El admin tiene 72 hrs para activar tu cuenta.');
         this.$router.push('/login');
       } catch (error) {
         console.error(error);
-        alert('Error en el registro');
+
+        alert(`Error en el registro: ${error}`);
       }
     },
     onFileChange(event) {
@@ -117,6 +128,35 @@ export default {
 
 
 <style scoped>
+.loader {
+  /*position: absolute;*/
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  /*position: relative;*/
+  animation: rotate 1s linear infinite;
+}
+
+.loader::before, .loader::after {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #FFF;
+  animation: prixClipFix 2s linear infinite;
+}
+
+.loader::after {
+  border-color: #FF3D00;
+  animation: prixClipFix 2s linear infinite, rotate 0.5s linear infinite reverse;
+  inset: 6px;
+}
+
 .container {
   max-width: 400px;
 }
@@ -138,4 +178,6 @@ export default {
   background-color: #6c757d;
   border-color: #6c757d;
 }
+
+
 </style>

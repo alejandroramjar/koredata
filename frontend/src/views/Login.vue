@@ -1,6 +1,8 @@
 <template>
   <div class="container mt-5">
     <div class="card shadow-sm">
+      <span id="loader" style="display: none;"
+                  class="loader">                                             </span>
       <div class="card-body">
         <h2 class="card-title text-center mb-4">Iniciar Sesión</h2>
         <form @submit.prevent="login">
@@ -43,6 +45,7 @@ export default {
   methods: {
     async login() {
   try {
+    document.getElementById('loader').style.display = 'block'; // Muestra el indicador de carga
     const response = await axios.post('http://localhost:8000/api/token/', {
     //const response = await axios.post('http://localhost:8000/api-token-auth/', {
       username: this.username,
@@ -53,7 +56,8 @@ export default {
       }
     });
     localStorage.setItem('token', response.data.access);
-    console.log('Token guardado:', localStorage.getItem('token')); // Verifica el token aquí
+    console.log('Token guardado:', localStorage.getItem('token'));
+    document.getElementById('loader').style.display = 'none'; // Ocultar el indicador de carga
     this.$router.push('admin/table-list');
   } catch (error) {
     console.error(error);

@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
-from decouple import config  # para las variables de entorno de desarrollo
+from decouple import config as decouple_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 """Extraccion de variables de entorno del proyecto"""
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-s=tfu3k+-wkc85@3@%t4f4#b_&^wi$5=z1=4k1hplk)l#f#-zk')
@@ -32,7 +32,6 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 THIRD_PARTY_APPS = [
-
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -43,7 +42,6 @@ LOCAL_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
-
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

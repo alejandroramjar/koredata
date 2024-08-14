@@ -8,12 +8,13 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import AllowAny
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario
-from .serializers import UsuarioSerializer, RegisterSerializer
+from .serializers import UsuarioSerializer, RegisterSerializer, UserSerializer
+from .decorators import superuser_required
 
 logger = logging.getLogger(__name__)
 
@@ -21,11 +22,47 @@ logger = logging.getLogger(__name__)
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def handle_exception(self, exc):
         logger.error(f"Error en UsuarioViewSet: {exc}")
         return super().handle_exception(exc)
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            response = super().retrieve(request, *args, **kwargs)
+            logger.info(f"Detalles del usuario obtenidos para el ID: {kwargs['pk']}")
+            return response
+        except Exception as e:
+            logger.critical(f"Error inesperado al obtener los detalles del usuario: {e}")
+            return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, *args, **kwargs):
+        try:
+            response = super().update(request, *args, **kwargs)
+            logger.info(f"Detalles del usuario actualizados para el ID: {kwargs['pk']}")
+            return response
+        except Exception as e:
+            logger.critical(f"Error inesperado al actualizar los detalles del usuario: {e}")
+            return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            logger.info(
+                f'Solicitud de eliminación de usuario por parte del usuario: {request.user.username} al usuario {kwargs["pk"]}')
+            if not request.user.is_superuser:
+                logger.warning(f'El usuario {request.user.username} no tiene permitido eliminar a otros usuarios.')
+                return Response({'error': 'El usuario no permitido ejecutar esta acción.'},
+                                status=status.HTTP_403_FORBIDDEN)
+            response = super().destroy(request, *args, **kwargs)
+            logger.info(f"Usuario eliminado con ID: {kwargs['pk']}")
+            return response
+        except Exception as e:
+            logger.critical(f"Error inesperado al eliminar el usuario: {e}")
+            return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class RegistroUsuario(generics.CreateAPIView):
@@ -79,3 +116,52 @@ class ActiveUsersCountView(APIView):
         user_auth_count = len(set(user_ids))
         user_count = User.objects.filter(is_active=True).count()
         return Response({'count': user_count, 'user_auth_count': user_auth_count, 'request_count': request_count})
+
+# class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Usuario.objects.all()
+#     serializer_class = UserSerializer
+#     permission_classes = [IsAuthenticated]
+#
+#     @superuser_required
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             response = super().get(request, *args, **kwargs)
+#             logger.info(
+#                 f"Detalles del usuario obtenidos para el ID: {kwargs['pk']}")  # Registro de evento de obtención de detalles de usuario
+#             return response
+#         except Exception as e:
+#             logger.critical(
+#                 f"Error inesperado al obtener los detalles del usuario: {e}")  # Registro de evento de error crítico
+#             return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#
+#     @superuser_required
+#     def put(self, request, *args, **kwargs):
+#         try:
+#             response = super().put(request, *args, **kwargs)
+#             logger.info(
+#                 f"Detalles del usuario actualizados para el ID: {kwargs['pk']}")  # Registro de evento de actualización de detalles de usuario
+#             return response
+#         except Exception as e:
+#             logger.critical(
+#                 f"Error inesperado al actualizar los detalles del usuario: {e}")  # Registro de evento de error crítico
+#             return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#
+#     @superuser_required
+#     def delete(self, request, *args, **kwargs):
+#         try:
+#             logger.info(
+#                 f'Solicitud de eliminación de usuario por parte del usuario: {request.user.username} al usuario {kwargs["pk"]}')
+#             if not request.user.is_superuser:
+#                 logger.warning(
+#                     f'El usuario {request.user.username} no tiene permitido eliminar a otros usuarios.')
+#                 return Response({'error': 'El usuario no permitido ejecutar esta acción.'},
+#                                 status=status.HTTP_403_FORBIDDEN, )
+#             response = super().delete(request, *args, **kwargs)
+#             logger.info(f"Usuario eliminado con ID: {kwargs['pk']}")  # Registro de evento de eliminación de usuario
+#             return response
+#         except Exception as e:
+#             logger.critical(f"Error inesperado al eliminar el usuario: {e}")  # Registro de evento de error crítico
+#             return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+#                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)

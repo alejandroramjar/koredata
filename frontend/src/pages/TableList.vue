@@ -98,7 +98,7 @@ export default {
     },
     closeCreateForm() {
       this.showCreateForm = false; // Cierra el formulario de creación
-      this.fetchTableData(); // Opcional: actualiza la tabla después de crear un usuario
+      this.fetchTableData();
     },
     editUser(id) {
       const user = this.table1.data.find(user => user.id === id);
@@ -108,6 +108,7 @@ export default {
     },
     closeEditForm() {
       this.selectedUser = null;
+      this.fetchTableData(); // Actualiza la tabla después de la edición
     },
     confirmDeleteUser(item) {
       if (confirm(`¿Estás seguro de que deseas eliminar al usuario?: ${item.id}`)) {

@@ -13,6 +13,7 @@
     "lint-fix": "vue-cli-service lint --fix"
   },
   "dependencies": {
+    "@saeris/vue-spinners": "^1.0.8",
     "axios": "^1.7.3",
     "bootstrap": "4.6.0",
     "cache-loader": "^4.1.0",
