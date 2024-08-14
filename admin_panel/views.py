@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario
-from .serializers import UsuarioSerializer, RegisterSerializer, UserSerializer
+from .serializers import UsuarioSerializer, RegisterSerializer
 from .decorators import superuser_required
 
 logger = logging.getLogger(__name__)
