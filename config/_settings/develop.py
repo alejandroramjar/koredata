@@ -5,17 +5,17 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'koredata',
-        'USER': 'postgres',
-        'PASSWORD': '**Drake3304++',
-        'HOST': 'localhost',
-        'PORT': '9408',
-        'ATOMIC_REQUESTS': True,
+        'NAME': config('DB_NAME', default='koredata'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 # ALLOWED_HOSTS = ["127.0.0.1"]
 # ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = [f'127.0.0.{i}' for i in range(1, 256)]
+# ALLOWED_HOSTS = [f'127.0.0.{i}' for i in range(1, 256)]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # ***********************CONFIG EMAIL********************************************
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -43,7 +43,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['file'],  # se quito la consola del registro de eventos
+        'handlers': ['file', 'console'],  # se quito la consola del registro de eventos
         'level': 'DEBUG',
         'propagate': True,
     },

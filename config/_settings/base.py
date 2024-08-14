@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
+from decouple import config  # para las variables de entorno de desarrollo
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,7 @@ def get_env_variable(var_name):
 # Application definition
 DJANGO_APPS = [
     'jet.dashboard',
-    'jet',  # django jet, es obligatorio ponerlo encima
+    'jet',  # django jet, es obligatorio ponerlo encima del admin de django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +44,6 @@ LOCAL_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -149,5 +149,5 @@ ADMIN_SITE_HEADER = "Administración Usuarios"
 # _______SESIONES_______
 SESSION_COOKIE_AGE = 3600  # Establece la duración de la sesión en segundos.
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'  # configura Django para almacenar los mensajes en una cookie.
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # onfigura Django para que las sesiones expiren cuando el navegador se cierra.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # configura Django para que las sesiones expiren cuando el navegador se cierra.
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'  # establece el motor de sesiones de Django para usar el caché como backend.

@@ -27,6 +27,7 @@ export default {
     data: Array
   },
   methods: {
+
     hasValue(item, column) {
       return item[column.toLowerCase()] !== undefined && item[column.toLowerCase()] !== null;
     },

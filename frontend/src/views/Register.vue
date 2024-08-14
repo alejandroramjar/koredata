@@ -101,7 +101,7 @@ export default {
           }
         });
         console.log(response);
-        alert('Registro exitoso. Ahora puedes iniciar sesión.');
+        alert('Registro exitoso. El admin tiene 72 hrs para activar tu cuenta.');
         this.$router.push('/login');
       } catch (error) {
         console.error(error);

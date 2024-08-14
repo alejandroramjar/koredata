@@ -41,9 +41,9 @@
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <router-link to="/admin/user" class="nav-link" href="#">
               Account
-            </a>
+            </router-link>
           </li>
           <base-dropdown title="Info">
             <a class="dropdown-item" href="#">..</a>

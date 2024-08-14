@@ -11,9 +11,8 @@
               <p class="card-category">Usuarios Activos</p>
               <h4 class="card-title">{{ userCount }}</h4>
             </div>
-            <div slot="footer">
-              <i class="fa fa-refresh" @click="fetchActiveUsersCount"></i> Actualizar
-            </div>
+            <div  slot="footer"  @click="fetchActiveUsersCount"><i class="fa fa-refresh" ></i>Actualizar</div>
+
           </stats-card>
         </div>
         <div class="col-xl-3 col-md-6">
@@ -25,7 +24,7 @@
               <p class="card-category">Usuarios Authenticados</p>
               <h4 class="card-title">{{ userAuth }}</h4>
             </div>
-            <div slot="footer">
+            <div slot="footer" @click="fetchActiveUsersCount">
               <i class="fa fa-refresh"></i>Actualizar
             </div>
           </stats-card>
@@ -40,8 +39,8 @@
               <p class="card-category">Visitas</p>
               <h4 class="card-title">{{ requestCount }}</h4>
             </div>
-            <div slot="footer">
-              <i class="fa fa-calendar-o"></i>Last day
+            <div slot="footer" @click="fetchActiveUsersCount">
+              <i class="fa fa-calendar-o"></i>Actualizar
             </div>
           </stats-card>
         </div>
@@ -292,7 +291,7 @@ export default {
   },
   created() {
       this.fetchActiveUsersCount();
-      setInterval(this.fetchActiveUsersCount, 600); // Actualiza cada 6 segundos
+      setInterval(this.fetchActiveUsersCount, 60000); // Actualiza cada 6 minutos
     }
 }
 
