@@ -13,8 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Usuario
-from .serializers import UsuarioSerializer, RegisterSerializer
-from .decorators import superuser_required
+from .serializers import UsuarioSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,13 @@ logger = logging.getLogger(__name__)
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    permission_classes = [IsAdminUser]
+
+    def get_permissions(self):
+        if self.action in ['update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsAdminUser]
+        else:
+            self.permission_classes = [IsAuthenticated]
+        return super().get_permissions()
 
     def handle_exception(self, exc):
         logger.error(f"Error en UsuarioViewSet: {exc}")
@@ -45,7 +50,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             return response
         except Exception as e:
             logger.critical(f"Error inesperado al actualizar los detalles del usuario: {e}")
-            return Response({"error": "Error inesperado, por favor intente nuevamente más tarde."},
+            return Response({"error": f"Error inesperado, por favor intente nuevamente más tarde.{e}"},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, *args, **kwargs):
@@ -54,7 +59,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
                 f'Solicitud de eliminación de usuario por parte del usuario: {request.user.username} al usuario {kwargs["pk"]}')
             if not request.user.is_superuser:
                 logger.warning(f'El usuario {request.user.username} no tiene permitido eliminar a otros usuarios.')
-                return Response({'error': 'El usuario no permitido ejecutar esta acción.'},
+                return Response({'error': 'El usuario no tiene permitido ejecutar esta acción.'},
                                 status=status.HTTP_403_FORBIDDEN)
             response = super().destroy(request, *args, **kwargs)
             logger.info(f"Usuario eliminado con ID: {kwargs['pk']}")
@@ -67,7 +72,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
 class RegistroUsuario(generics.CreateAPIView):
     queryset = Usuario.objects.all()
-    serializer_class = RegisterSerializer
+    serializer_class = UsuarioSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):

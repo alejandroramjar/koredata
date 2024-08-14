@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Usuario(AbstractUser):
     """ Se definen edad y CPF en null=True y blank=True para poder crear el superusuario"""
+    email = models.EmailField(unique=True)
     edad = models.IntegerField(null=True, blank=True)
     cpf = models.CharField(max_length=11, unique=True, null=True, blank=True)
 

@@ -35,6 +35,8 @@
           <base-input
             type="text"
             label="CPF"
+            maxlength="11"
+            minlength="11"
             placeholder="CPF"
             v-model="user.cpf"
           />
@@ -98,14 +100,18 @@ export default {
           'Authorization': `Bearer ${token}`
         }
       })
-      .then(() => {
-        alert('Perfil actualizado con éxito');
-        this.$emit('close'); // Cerrar el formulario después de la actualización
-      })
-      .catch(error => {
-        console.error('Error al actualizar el perfil:', error);
-        alert('Error al actualizar el perfil');
-      });
+        .then(() => {
+          alert('Perfil actualizado con éxito');
+          this.$emit('close'); // Cerrar el formulario después de la actualización
+        })
+        .catch(error => {
+          console.error('Error al actualizar el perfil:', error);
+          if (error.response && error.response.data) {
+            alert(`Error al actualizar el perfil: ${error.response.data.error.ErrorDetail || error.response.data}`);
+          } else {
+            alert('Error al actualizar el perfil: Ocurrió un error inesperado.');
+          }
+        });
     }
   }
 }
