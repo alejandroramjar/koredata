@@ -120,7 +120,7 @@ ubicado en la carpeta `frontend` en la raíz del proyecto.
     ```
 
 ## Estructura del Proyecto
-
+```
 koredata/ 
 ├── .idea/ 
 ├── .venv/ 
@@ -157,6 +157,7 @@ koredata/
 ├── README.md 
 ├── requirements.txt 
 └── Test_koredata.txt
+```
 
 ## Despliegue
 
